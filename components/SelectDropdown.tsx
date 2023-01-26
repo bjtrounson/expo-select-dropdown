@@ -49,7 +49,7 @@ function DropdownItems({items, select}: DropdownItemsProps<string, string>) {
 interface SelectDropdownProps {
     data: DropdownData<string, string>[]
     placeholder: string
-    selected: DropdownData<string, string>
+    selected: DropdownData<string, string> | null
     setSelected: (selected: DropdownData<string, string>) => void
     searchOptions?: TextInputProps
     searchBoxStyles?: ViewStyle
@@ -114,7 +114,7 @@ export default function SelectDropdown({data, placeholder, searchOptions, select
                     className={"flex-row border-2 rounded-md px-2 p-1"}
                     style={[{minHeight: 30}, searchBoxStyles]}
                 >
-                    <Text className={"text-zinc-700 text-base flex-[1] font-medium my-auto grow ml-2"}>{selected.value ? selected.value : placeholder}</Text>
+                    <Text className={"text-zinc-700 text-base flex-[1] font-medium my-auto grow ml-2"}>{selected ? selected.value : placeholder}</Text>
                     <MaterialIcons name="keyboard-arrow-down" size={24} color="black" />
                 </TouchableOpacity>
             )}
