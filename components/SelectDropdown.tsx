@@ -47,10 +47,10 @@ function DropdownItems({items, select}: DropdownItemsProps<string, string>) {
 
 
 interface SelectDropdownProps {
-    data: DropdownData<string, string>[]
+    data: DropdownData<any, any>[]
     placeholder: string
-    selected: DropdownData<string, string> | null
-    setSelected: (selected: DropdownData<string, string>) => void
+    selected: DropdownData<any, any> | null
+    setSelected: (selected: DropdownData<any, any>) => void
     searchOptions?: TextInputProps
     searchBoxStyles?: ViewStyle
     dropdownStyles?: ViewStyle
