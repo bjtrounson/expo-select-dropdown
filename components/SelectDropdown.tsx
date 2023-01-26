@@ -5,46 +5,14 @@ import {
     TextInputProps,
     TouchableOpacity,
     View,
-    ViewStyle
+    ViewStyle,
+    StyleSheet
 } from "react-native";
 import Animated, {Easing, useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 import {useState} from "react";
 import {MaterialIcons} from "@expo/vector-icons";
-
-export interface DropdownData<T, U> {
-    key: T;
-    value: U;
-}
-
-interface DropdownItemsProps<T, U> {
-    items: DropdownData<T, U>[];
-    select: (item: DropdownData<T, U>) => void;
-}
-
-function DropdownItems({items, select}: DropdownItemsProps<string, string>) {
-    if (items.length === 0) return (
-        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-            <Text style={{color: "gray"}}>No results found</Text>
-        </View>
-    )
-
-    return (
-        <>
-            {items.map((item, index) => (
-                <TouchableOpacity
-                    key={item.key}
-                    className={`flex-row items-center justify-between ${index === 0 ? "pb-2" : "py-2"} grow ${index + 1 < items.length ? "border-b border-zinc-200" : null}`}
-                    onPress={() => select(item)}
-                >
-                    <Text className={"px-3 text-zinc-700 text-base flex-[1] font-medium"}>
-                        {item.value}
-                    </Text>
-                </TouchableOpacity>
-            ))}
-        </>
-    )
-}
-
+import DropdownItems from "./DropdownItems";
+import DropdownData from "../interfaces/DropdownData";
 
 interface SelectDropdownProps {
     data: DropdownData<any, any>[]
@@ -60,7 +28,7 @@ export default function SelectDropdown({data, placeholder, searchOptions, select
     const [value, setValue] = useState<string>("");
     const [filteredData, setFilteredData] = useState<DropdownData<string, string>[]>(data);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [isAnimationFinished, setIsAnimationFinished] = useState(false);
+    const [isAnimationFinished, setIsAnimationFinished] = useState(true);
 
     const dropdownHeight = useSharedValue(200);
 
@@ -69,7 +37,7 @@ export default function SelectDropdown({data, placeholder, searchOptions, select
         easing: Easing.bezier(0.5, 0.01, 0, 1),
     }
 
-    const style = useAnimatedStyle(() => {
+    const animatedStyle = useAnimatedStyle(() => {
         return {
             height: withTiming(dropdownHeight.value, config),
         };
@@ -97,11 +65,11 @@ export default function SelectDropdown({data, placeholder, searchOptions, select
     return (
         <>
             { isDropdownOpen ? (
-                <View className={"flex-row border-2 rounded-md px-2 p-1"} style={[{minHeight: 30}, searchBoxStyles]}>
+                <View style={[style.dropdownSearchBox, searchBoxStyles]}>
                     <MaterialIcons name="search" size={24} color="black" />
                     <TextInput
                         placeholder={placeholder}
-                        className={"p-0 m-0 ml-2 grow"}
+                        style={style.dropdownSearchInput}
                         value={value}
                         onChangeText={onSearching}
                         {...searchOptions}
@@ -111,16 +79,21 @@ export default function SelectDropdown({data, placeholder, searchOptions, select
             ) : (
                 <TouchableOpacity
                     onPress={onDropdownToggle}
-                    className={"flex-row border-2 rounded-md px-2 p-1"}
-                    style={[{minHeight: 30}, searchBoxStyles]}
+                    style={[style.selectedButton, searchBoxStyles]}
                 >
-                    <Text className={"text-zinc-700 text-base flex-[1] font-medium my-auto grow ml-2"}>{selected ? selected.value : placeholder}</Text>
+                    <Text style={style.selectedText}>
+                        {selected ? selected.value : placeholder}
+                    </Text>
                     <MaterialIcons name="keyboard-arrow-down" size={24} color="black" />
                 </TouchableOpacity>
             )}
-            <Animated.View className={"border-2 rounded-md mt-1"} style={[{display: isAnimationFinished ? "none" : "flex"}, style, dropdownStyles]}>
+            <Animated.View
+                style={[
+                    {display: isAnimationFinished ? "none" : "flex"},
+                    animatedStyle, style.dropdown, dropdownStyles
+                ]}>
                 <ScrollView
-                    className={`flex-col px-2`}
+                    style={style.dropdownScroll}
                     contentContainerStyle={{paddingVertical: 10, overflow:'hidden'}}
                     nestedScrollEnabled={true}
                 >
@@ -130,3 +103,50 @@ export default function SelectDropdown({data, placeholder, searchOptions, select
         </>
     )
 }
+
+const style = StyleSheet.create({
+    dropdown: {
+        borderWidth: 2,
+        borderRadius: 5,
+        borderColor: "black",
+        marginTop: 4,
+    },
+    dropdownScroll: {
+        flexDirection: "column",
+        paddingHorizontal: 8,
+    },
+    dropdownSearchBox: {
+        flexDirection: "row",
+        borderWidth: 2,
+        borderRadius: 5,
+        borderColor: "black",
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        minHeight: 30,
+    },
+    dropdownSearchInput: {
+        flexGrow: 1,
+        padding: 0,
+        margin: 0,
+        marginLeft: 8,
+    },
+    selectedText: {
+        flexGrow: 1,
+        color: "#3F3F46",
+        fontSize: 14,
+        fontWeight: "500",
+        lineHeight: 20,
+        marginVertical: "auto",
+        marginLeft: 8,
+    },
+    selectedButton: {
+        flexDirection: "row",
+        borderWidth: 2,
+        borderRadius: 5,
+        borderColor: "black",
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        minHeight: 30,
+    },
+});
+
