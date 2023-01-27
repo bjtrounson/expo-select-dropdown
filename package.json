@@ -1,6 +1,6 @@
 {
   "name": "expo-select-dropdown",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "repository": "https://github.com/bjtrounson/expo-select-dropdown",
   "main": "index.ts",
   "scripts": {

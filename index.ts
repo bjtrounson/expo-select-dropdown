@@ -1,4 +1,4 @@
-import SelectDropdown from "./components/SelectDropdown";
+import SelectDropdown, {SelectDropdownProps} from "./components/SelectDropdown";
 import DropdownData from "./interfaces/DropdownData";
 import { registerRootComponent } from 'expo';
 
@@ -9,4 +9,4 @@ import App from './App';
 // the environment is set up appropriately
 registerRootComponent(App);
 
-export {SelectDropdown, DropdownData}
+export {SelectDropdown, SelectDropdownProps, DropdownData}

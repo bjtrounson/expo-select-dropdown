@@ -14,7 +14,7 @@ import {MaterialIcons} from "@expo/vector-icons";
 import DropdownItems from "./DropdownItems";
 import DropdownData from "../interfaces/DropdownData";
 
-interface SelectDropdownProps {
+export interface SelectDropdownProps {
     data: DropdownData<any, any>[]
     placeholder: string
     selected: DropdownData<any, any> | null
