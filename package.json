@@ -1,8 +1,19 @@
 {
   "name": "expo-select-dropdown",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "repository": "https://github.com/bjtrounson/expo-select-dropdown",
   "main": "index.ts",
+  "description": "Expo / React Native Select Dropdown with search and other customizations",
+  "author": "Ben Trounson",
+  "keywords": [
+    "react-native",
+    "expo",
+    "dropdown",
+    "select",
+    "search",
+    "filter"
+  ],
+  "license": "MIT",
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
