@@ -7,11 +7,11 @@ Expo / React Native Select Dropdown
 </h1>
 
 <h3>Installation</h3>
-```bash
+```console
   npm install expo-select-dropdown
 ```
 OR
-```bash
+```console
     yarn add expo-select-dropdown
 ```
 
