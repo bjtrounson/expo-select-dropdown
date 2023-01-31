@@ -1,6 +1,6 @@
 {
   "name": "expo-select-dropdown",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "repository": "https://github.com/bjtrounson/expo-select-dropdown",
   "main": "index.ts",
   "description": "Expo / React Native Select Dropdown with search and other customizations",
