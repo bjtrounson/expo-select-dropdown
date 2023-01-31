@@ -7,12 +7,12 @@ Expo / React Native Select Dropdown
 </h1>
 
 <h3>Installation</h3>
-```shell
-  npm install expo-select-dropdown
+```
+npm install expo-select-dropdown
 ```
 OR
-```shell
-    yarn add expo-select-dropdown
+```
+yarn add expo-select-dropdown
 ```
 
 <h4> Dependencies </h4>
