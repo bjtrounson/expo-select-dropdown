@@ -7,13 +7,11 @@ Expo / React Native Select Dropdown
 </h1>
 
 <h3>Installation</h3>
-```
-npm install expo-select-dropdown
-```
+
+    npm install expo-select-dropdown
 OR
-```
-yarn add expo-select-dropdown
-```
+
+    yarn add expo-select-dropdown
 
 <h4> Dependencies </h4>
 This package depends on the following packages:
