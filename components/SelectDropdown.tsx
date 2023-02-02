@@ -1,5 +1,4 @@
 import {
-    ScrollView,
     Text,
     TextInput,
     TextInputProps,
@@ -7,31 +6,31 @@ import {
     View,
     ViewStyle,
     StyleSheet,
-    Animated
+    Animated, FlatList
 } from "react-native";
 import {useRef, useState} from "react";
 import {MaterialIcons} from "@expo/vector-icons";
-import DropdownItems from "./DropdownItems";
 import DropdownData from "../interfaces/DropdownData";
 import {TagData} from "../interfaces/TagData";
 import TagFilter from "./TagFilter";
+import DropdownItem from "./DropdownItems";
 
 export interface SelectDropdownProps {
     data: DropdownData<any, any>[]
     placeholder: string
     selected: DropdownData<any, any> | null
     setSelected: (selected: DropdownData<any, any>) => void
+    usePressable?: boolean
     tags?: TagData[]
     searchOptions?: TextInputProps
     searchBoxStyles?: ViewStyle
     dropdownStyles?: ViewStyle
 }
 
-export default function SelectDropdown({data, tags, placeholder, searchOptions, selected, setSelected, searchBoxStyles, dropdownStyles}: SelectDropdownProps) {
+export default function SelectDropdown({data, tags, placeholder, searchOptions, selected, setSelected, searchBoxStyles, dropdownStyles, usePressable}: SelectDropdownProps) {
     const [value, setValue] = useState<string>("");
     const [filteredData, setFilteredData] = useState<DropdownData<string, string>[]>(data);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [isCloseAnimationFinished, setIsCloseAnimationFinished] = useState(true);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
 
     const dropdownHeight = useRef(new Animated.Value(0)).current;
@@ -48,9 +47,8 @@ export default function SelectDropdown({data, tags, placeholder, searchOptions, 
     }
 
     const onDropdownToggle = (open: boolean) => {
-        setIsDropdownOpen(open);
         if (open) {
-            setIsCloseAnimationFinished(false)
+            setIsDropdownOpen(open);
             Animated.timing(dropdownHeight, {
                 toValue: 200,
                 duration: 500,
@@ -58,10 +56,10 @@ export default function SelectDropdown({data, tags, placeholder, searchOptions, 
             }).start();
         } else {
             Animated.timing(dropdownHeight, {
-                toValue: 0,
-                duration: 500,
+                toValue: 10,
+                duration: 600,
                 useNativeDriver: false
-            }).start(({finished}) => setIsCloseAnimationFinished(finished));
+            }).start(() => setIsDropdownOpen(open));
         }
     }
 
@@ -97,30 +95,47 @@ export default function SelectDropdown({data, tags, placeholder, searchOptions, 
                     <MaterialIcons style={style.exitIcon} name="keyboard-arrow-down" size={24} color="black" />
                 </TouchableOpacity>
             )}
-            <Animated.View
+            { isDropdownOpen ? <Animated.View
                 style={[
                     style.dropdown,
-                    {display: isCloseAnimationFinished ? "none" : "flex", height: dropdownHeight},
+                    {maxHeight: dropdownHeight},
                     dropdownStyles
                 ]}>
-                <ScrollView
+
+                <FlatList
                     style={style.dropdownScroll}
                     contentContainerStyle={{paddingVertical: 10, overflow:'hidden'}}
                     nestedScrollEnabled={true}
+                    data={filteredData}
+                    keyExtractor={(item, index) => index.toString()}
+                    ListHeaderComponent={
+                        <TagFilter
+                            tags={tags}
+                            isFilterOpen={isFilterOpen}
+                            setIsFilterOpen={() => {
+                                setIsFilterOpen(!isFilterOpen)
+                                resetData()
+                            }}
+                            setFilteredData={setFilteredData}
+                            resetData={resetData}
+                        />
+                    }
+                    renderItem={({item, index}) => {
+                        if (filteredData.length === 0) {
+                            return (
+                                <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+                                    <Text style={{color: "gray"}}>No results found</Text>
+                                </View>
+                            )
+                        }
+
+                        return (
+                            <DropdownItem key={index} index={index} items={filteredData} item={item} select={onSelect} usePressable={usePressable} />
+                        );
+                    }}
                 >
-                    <TagFilter
-                        tags={tags}
-                        isFilterOpen={isFilterOpen}
-                        setIsFilterOpen={() => {
-                            setIsFilterOpen(!isFilterOpen)
-                            resetData()
-                        }}
-                        setFilteredData={setFilteredData}
-                        resetData={resetData}
-                    />
-                    <DropdownItems items={filteredData} select={onSelect} />
-                </ScrollView>
-            </Animated.View>
+                </FlatList>
+            </Animated.View> : null }
         </>
     )
 }

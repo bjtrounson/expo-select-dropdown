@@ -1,32 +1,37 @@
-import {Text, TouchableOpacity, View, StyleSheet} from "react-native";
+import {Text, TouchableOpacity, StyleSheet, Pressable} from "react-native";
 import DropdownData from "../interfaces/DropdownData";
 
-interface DropdownItemsProps<T, U> {
-    items: DropdownData<T, U>[];
-    select: (item: DropdownData<T, U>) => void;
+interface DropdownItemsProps {
+    items: DropdownData<any,any>[];
+    item: DropdownData<any, any>;
+    index: number;
+    select: (item: DropdownData<any, any>) => void;
+    usePressable?: boolean;
 }
 
-export default function DropdownItems({items, select}: DropdownItemsProps<string, string>) {
-    if (items.length === 0) return (
-        <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-            <Text style={{color: "gray"}}>No results found</Text>
-        </View>
-    )
+export default function DropdownItem({items, item, index, select, usePressable}: DropdownItemsProps) {
+    if (usePressable) return (
+        <Pressable
+            key={item.key}
+            style={[style.container, index === 0 && style.firstItem, index === items.length - 1 && style.lastItem]}
+            onPress={() => select(item)}
+        >
+            <Text style={style.text}>
+                {item.value}
+            </Text>
+        </Pressable>
+    );
 
     return (
-        <>
-            {items.map((item, index) => (
-                <TouchableOpacity
-                    key={item.key}
-                    style={[style.container, index === 0 && style.firstItem, index === items.length - 1 && style.lastItem]}
-                    onPress={() => select(item)}
-                >
-                    <Text style={style.text}>
-                        {item.value}
-                    </Text>
-                </TouchableOpacity>
-            ))}
-        </>
+        <TouchableOpacity
+            key={item.key}
+            style={[style.container, index === 0 && style.firstItem, index === items.length - 1 && style.lastItem]}
+            onPress={() => select(item)}
+        >
+            <Text style={style.text}>
+                {item.value}
+            </Text>
+        </TouchableOpacity>
     )
 }
 
