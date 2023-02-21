@@ -16,6 +16,8 @@ import TagFilter from "./TagFilter";
 import DropdownItem from "./DropdownItems";
 
 export interface SelectDropdownProps {
+    testID?: string
+    testIDDropdown?: string
     data: DropdownData<any, any>[]
     placeholder: string
     selected: DropdownData<any, any> | null
@@ -27,7 +29,7 @@ export interface SelectDropdownProps {
     dropdownStyles?: ViewStyle
 }
 
-export default function SelectDropdown({data, tags, placeholder, searchOptions, selected, setSelected, searchBoxStyles, dropdownStyles, usePressable}: SelectDropdownProps) {
+export default function SelectDropdown({testID, testIDDropdown, data, tags, placeholder, searchOptions, selected, setSelected, searchBoxStyles, dropdownStyles, usePressable}: SelectDropdownProps) {
     const [value, setValue] = useState<string>("");
     const [filteredData, setFilteredData] = useState<DropdownData<string, string>[]>(data);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -72,7 +74,7 @@ export default function SelectDropdown({data, tags, placeholder, searchOptions, 
     return (
         <>
             { isDropdownOpen ? (
-                <View style={[style.dropdownSearchBox, searchBoxStyles]}>
+                <View testID={testID} style={[style.dropdownSearchBox, searchBoxStyles]}>
                     <MaterialIcons style={style.searchIcon} name="search" size={24} color="black" />
                     <View style={style.searchDivider} />
                     <TextInput
@@ -86,6 +88,7 @@ export default function SelectDropdown({data, tags, placeholder, searchOptions, 
                 </View>
             ) : (
                 <TouchableOpacity
+                    testID={testID}
                     onPress={() => onDropdownToggle(true)}
                     style={[style.dropdownSearchBox, searchBoxStyles]}
                 >
@@ -96,6 +99,7 @@ export default function SelectDropdown({data, tags, placeholder, searchOptions, 
                 </TouchableOpacity>
             )}
             { isDropdownOpen ? <Animated.View
+                testID={testIDDropdown}
                 style={[
                     style.dropdown,
                     {maxHeight: dropdownHeight},

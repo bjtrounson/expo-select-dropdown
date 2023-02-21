@@ -12,6 +12,7 @@ interface DropdownItemsProps {
 export default function DropdownItem({items, item, index, select, usePressable}: DropdownItemsProps) {
     if (usePressable) return (
         <Pressable
+            testID={`dropdown-item-${item.key}`}
             key={item.key}
             style={[style.container, index === 0 && style.firstItem, index === items.length - 1 && style.lastItem]}
             onPress={() => select(item)}
@@ -24,6 +25,7 @@ export default function DropdownItem({items, item, index, select, usePressable}:
 
     return (
         <TouchableOpacity
+            testID={`dropdown-item-${item.key}`}
             key={item.key}
             style={[style.container, index === 0 && style.firstItem, index === items.length - 1 && style.lastItem]}
             onPress={() => select(item)}
