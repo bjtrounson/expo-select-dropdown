@@ -1,4 +1,4 @@
-import {Text, TouchableOpacity, StyleSheet, Pressable} from "react-native";
+import {Text, StyleSheet, Pressable} from "react-native";
 import DropdownData from "../interfaces/DropdownData";
 
 interface DropdownItemsProps {
@@ -24,7 +24,7 @@ export default function DropdownItem({items, item, index, select, usePressable}:
     );
 
     return (
-        <TouchableOpacity
+        <Pressable
             testID={`dropdown-item-${item.key}`}
             key={item.key}
             style={[style.container, index === 0 && style.firstItem, index === items.length - 1 && style.lastItem]}
@@ -33,7 +33,7 @@ export default function DropdownItem({items, item, index, select, usePressable}:
             <Text style={style.text}>
                 {item.value}
             </Text>
-        </TouchableOpacity>
+        </Pressable>
     )
 }
 
