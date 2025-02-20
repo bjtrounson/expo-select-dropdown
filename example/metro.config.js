@@ -19,7 +19,7 @@ config.resolver.nodeModulesPaths = [
 ];
 
 config.resolver.extraNodeModules = {
-  'whatsapp-auth': '..',
+  'expo-select-dropdown': '..',
 };
 
 config.watchFolders = [path.resolve(__dirname, '..')];

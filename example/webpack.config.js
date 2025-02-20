@@ -6,7 +6,7 @@ module.exports = async (env, argv) => {
     {
       ...env,
       babel: {
-        dangerouslyAddModulePathsToTranspile: ['whatsapp-auth'],
+        dangerouslyAddModulePathsToTranspile: ['expo-select-dropdown'],
       },
     },
     argv

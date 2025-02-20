@@ -5,6 +5,12 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "author": "Ben Trounson",
+  "contributors": [
+    {
+      "name": "Jaime Neto",
+      "email": "jaimeflneto@gmail.com"
+    }
+  ],
   "keywords": [
     "react-native",
     "expo",
