@@ -1,12 +1,14 @@
+import React from 'react';
 import {
     Text,
     TextInput,
     TextInputProps,
-    TouchableOpacity,
     View,
     ViewStyle,
     StyleSheet,
-    Animated, FlatList
+    Animated,
+    FlatList,
+    Pressable
 } from "react-native";
 import {useRef, useState} from "react";
 import {MaterialIcons} from "@expo/vector-icons";
@@ -27,9 +29,27 @@ export interface SelectDropdownProps {
     searchOptions?: TextInputProps
     searchBoxStyles?: ViewStyle
     dropdownStyles?: ViewStyle
+    dropdownScrollStyles?: ViewStyle
+    noResultsText?: string
 }
 
-export default function SelectDropdown({testID, testIDDropdown, data, tags, placeholder, searchOptions, selected, setSelected, searchBoxStyles, dropdownStyles, usePressable}: SelectDropdownProps) {
+
+export default function SelectDropdown({
+    testID, 
+    testIDDropdown, 
+    data, 
+    tags, 
+    placeholder, 
+    searchOptions, 
+    selected, 
+    setSelected, 
+    searchBoxStyles, 
+    dropdownStyles, 
+    dropdownScrollStyles,
+    usePressable,
+    noResultsText
+}: SelectDropdownProps) {
+
     const [value, setValue] = useState<string>("");
     const [filteredData, setFilteredData] = useState<DropdownData<string, string>[]>(data);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -53,13 +73,13 @@ export default function SelectDropdown({testID, testIDDropdown, data, tags, plac
             setIsDropdownOpen(open);
             Animated.timing(dropdownHeight, {
                 toValue: 200,
-                duration: 500,
+                duration: 100,
                 useNativeDriver: false,
             }).start();
         } else {
             Animated.timing(dropdownHeight, {
                 toValue: 10,
-                duration: 600,
+                duration: 100,
                 useNativeDriver: false
             }).start(() => setIsDropdownOpen(open));
         }
@@ -75,7 +95,7 @@ export default function SelectDropdown({testID, testIDDropdown, data, tags, plac
         <>
             { isDropdownOpen ? (
                 <View testID={testID} style={[style.dropdownSearchBox, searchBoxStyles]}>
-                    <MaterialIcons style={style.searchIcon} name="search" size={24} color="black" />
+                    <MaterialIcons style={style.searchIcon} name="search" size={24} color="#606060" />
                     <View style={style.searchDivider} />
                     <TextInput
                         placeholder={placeholder}
@@ -84,10 +104,10 @@ export default function SelectDropdown({testID, testIDDropdown, data, tags, plac
                         onChangeText={onSearching}
                         {...searchOptions}
                     />
-                    <MaterialIcons style={style.exitIcon} name={"close"} size={24} color="black" onPress={() => onDropdownToggle(false)} />
+                    <MaterialIcons style={style.exitIcon} name={"close"} size={24} color="#606060" onPress={() => onDropdownToggle(false)} />
                 </View>
             ) : (
-                <TouchableOpacity
+                <Pressable
                     testID={testID}
                     onPress={() => onDropdownToggle(true)}
                     style={[style.dropdownSearchBox, searchBoxStyles]}
@@ -95,19 +115,18 @@ export default function SelectDropdown({testID, testIDDropdown, data, tags, plac
                     <Text style={style.selectedText}>
                         {selected ? selected.value : placeholder}
                     </Text>
-                    <MaterialIcons style={style.exitIcon} name="keyboard-arrow-down" size={24} color="black" />
-                </TouchableOpacity>
+                    <MaterialIcons style={style.exitIcon} name="keyboard-arrow-down" size={24} color="#606060" />
+                </Pressable>
             )}
             { isDropdownOpen ? <Animated.View
                 testID={testIDDropdown}
                 style={[
-                    style.dropdown,
                     {maxHeight: dropdownHeight},
                     dropdownStyles
                 ]}>
 
                 <FlatList
-                    style={style.dropdownScroll}
+                    style={[style.dropdownScroll, dropdownScrollStyles]}
                     contentContainerStyle={{paddingVertical: 10, overflow:'hidden'}}
                     nestedScrollEnabled={true}
                     data={filteredData}
@@ -128,7 +147,7 @@ export default function SelectDropdown({testID, testIDDropdown, data, tags, plac
                         if (filteredData.length === 0) {
                             return (
                                 <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-                                    <Text style={{color: "gray"}}>No results found</Text>
+                                    <Text style={{color: "gray"}}>{noResultsText || "No results found"}</Text>
                                 </View>
                             )
                         }
@@ -137,29 +156,28 @@ export default function SelectDropdown({testID, testIDDropdown, data, tags, plac
                             <DropdownItem key={index} index={index} items={filteredData} item={item} select={onSelect} usePressable={usePressable} />
                         );
                     }}
-                >
-                </FlatList>
+                />
             </Animated.View> : null }
         </>
     )
 }
 
 const style = StyleSheet.create({
-    dropdown: {
-        borderWidth: 2,
-        borderRadius: 5,
-        borderColor: "black",
-        marginTop: 4,
-    },
     dropdownScroll: {
+        backgroundColor: "white",
+        borderColor: "#606060",
+        borderWidth: 1,
         flexDirection: "column",
+        marginTop: 4,
         paddingHorizontal: 8,
+        position: "absolute",
+        width: "100%",
     },
     dropdownSearchBox: {
         flexDirection: "row",
-        borderWidth: 2,
+        borderWidth: 1,
         borderRadius: 5,
-        borderColor: "black",
+        borderColor: "#606060",
         paddingHorizontal: 8,
         paddingVertical: 4,
         minHeight: 30,
